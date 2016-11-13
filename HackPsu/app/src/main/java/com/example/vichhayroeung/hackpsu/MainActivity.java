@@ -22,9 +22,15 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
+
+
 
 public class MainActivity extends AppCompatActivity {
     private WebSocketClient mWebSocketClient;
+    private final WebSocketConnection mConnection = new WebSocketConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,47 +42,33 @@ public class MainActivity extends AppCompatActivity {
         connectWebSocket();
 
     }
-
     private void connectWebSocket() {
-        URI uri;
+
+        final String wsuri = "ws://tumesh@192.168.0.103:8080/text";
+
         try {
-            uri = new URI("ws://tumesh@192.168.0.103:8080/text");
-            Log.d("Self1", "initate connection");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
+            mConnection.connect(wsuri, new WebSocketHandler() {
+
+                @Override
+                public void onOpen() {
+                    Log.d("onOpen", "Status: Connected to " + wsuri);
+                    mConnection.sendTextMessage("Hello, world!");
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    Log.d("onText", "Got echo: " + payload);
+                }
+
+                @Override
+                public void onClose(int code, String reason) {
+                    Log.d("onClose", "Connection lost.");
+                }
+            });
+        } catch (WebSocketException e) {
+
+            Log.d("catchWeb", e.toString());
         }
-
-        mWebSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                Log.d("S", "open");
-                Log.i("Websocket", "Opened");
-                //mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
-            }
-
-            @Override
-            public void onMessage(String s) {
-                final String message = s;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        TextView textView = (TextView)findViewById(R.id.textView2);
-                        textView.setText(textView.getText() + "\n" + message);
-                    }
-                });
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                Log.i("Websocket", "Closed " + s);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i("Websocket", "Error " + e.getMessage());
-            }
-        };
-        mWebSocketClient.connect();
     }
+
 }
