@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">Hack0----Psu</string>
+    <string name="app_name">HackPSU-Multitool</string>
+    <string name="lights">Light-Controls</string>
+    <string name="data">Data Query</string>
 </resources>
