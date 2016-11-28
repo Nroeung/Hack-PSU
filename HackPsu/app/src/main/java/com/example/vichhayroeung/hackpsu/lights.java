@@ -18,7 +18,6 @@ public class lights extends AppCompatActivity {
     private final WebSocketConnection mConnection = new WebSocketConnection();
     public String link = "ws://tumesh@192.168.0.107:8080/";
     //public String link = "ws://tumesh@10.0.0.170:8080/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,29 +27,23 @@ public class lights extends AppCompatActivity {
         Log.d("Self", "This is my message");
         connectWebSocket(link+"test");
     }
-
     public void offButton(View view) {
         Log.d("Self", "This is my message");
         connectWebSocket(link+"test2");
     }
-
-
     private void connectWebSocket(String url) {
         final String wsuri = url;
         try {
             mConnection.connect(wsuri, new WebSocketHandler() {
-
                 @Override
                 public void onOpen() {
                     Log.d("onOpen", "Status: Connected to " + wsuri);
                     mConnection.sendTextMessage("Hello, world!");
                 }
-
                 @Override
                 public void onTextMessage(String payload) {
                     Log.d("onText", "Got echo: " + payload);
                 }
-
                 @Override
                 public void onClose(int code, String reason) {
                     Log.d("onClose", "Connection lost.");

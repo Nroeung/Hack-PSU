@@ -85,7 +85,6 @@ public class datapage extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.list);
         new GetContacts().execute();
     }
-
     private class GetContacts extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -109,7 +108,6 @@ public class datapage extends AppCompatActivity {
                     JSONObject jsonObj = new JSONObject(payloadData);
                     // Getting JSON Array node
                     JSONArray contacts = jsonObj.getJSONArray("contacts");
-
                     // looping through All Contacts
                     for (int i = 0; i < contacts.length(); i++) {
                         JSONObject c = contacts.getJSONObject(i);
